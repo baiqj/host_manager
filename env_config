@@ -1,0 +1,154 @@
+
+{
+	'SYSTEM':{
+'OS_version':
+'OS_bit':
+			}
+	
+	'APACHE_BASE':{
+'Apache_Install':apache是否安装，若安装则为on，若未安装，为off
+'Apache_Install_Way':apache安装方式，rpm和make两种安装方式
+'Apache_Rpm_Version': rpm安装的apachce的版本
+'Apache_Make_Version':make安装的apachce的版本
+'Apache_Make_Installation_Directory':make安装的apachce的安装路径
+'Apache_Rpm_Conf_Path':rpm安装的apachce的配置文件的位置
+'Apache_Make_Conf_Path':rpm安装的apachce的配置文件的位置
+			}
+			
+	'APACHE_OPTIONS':{
+'Apache_Rpm_ServerTokens':
+'Apache_Rpm_ServerRoot':
+'Apache_Rpm_PidFile':
+'Apache_Rpm_Timeout':
+'Apache_Rpm_KeepAlive':
+'Apache_Rpm_MaxKeepAliveRequests':
+'Apache_Rpm_KeepAliveTimeout':
+'Apache_Rpm_Listen':
+'Apache_Rpm_User':
+'Apache_Rpm_Group':
+'Apache_Rpm_ServerAdmin':
+'Apache_Rpm_UseCanonicalName':
+'Apache_Rpm_DocumentRoot':
+'Apache_Rpm_HostnameLookups':
+'Apache_Rpm_ErrorLog':
+'Apache_Rpm_ServerSignature':
+'Apache_Rpm_LogLevel':
+'Apache_Rpm_Log_Segmentation':
+'Apache_Rpm_Vhost'
+'Apache_Rpm_Vhost_Conf':
+'Apache_Make_ServerTokens':
+'Apache_Make_ServerRoot':
+'Apache_Make_PidFile':
+'Apache_Make_Timeout':
+'Apache_Make_KeepAlive':
+'Apache_Make_MaxKeepAliveRequests':
+'Apache_Make_KeepAliveTimeout':
+'Apache_Make_Listen':
+'Apache_Make_User':
+'Apache_Make_Group':
+'Apache_Make_ServerAdmin':
+'Apache_Make_UseCanonicalName':
+'Apache_Make_DocumentRoot':
+'Apache_Make_HostnameLookups':
+'Apache_Make_ErrorLog':
+'Apache_Make_ServerSignature':
+'Apache_Make_LogLevel':
+'Apache_Make_Log_Segmentation':
+'Apache_Make_Vhost'
+'Apache_Make_Vhost_Conf':
+			}
+			
+	'APACHE_MODULES':{
+'Apache_Rpm_mod_status':
+'Apache_Rpm_mod_expires':
+'Apache_Rpm_mod_security':
+'Apache_Rpm_libphp5':
+'Apache_Rpm_ssl':
+'Apache_Make_mod_status':
+'Apache_Make_mod_expires':
+'Apache_Make_mod_security':
+'Apache_Make_libphp5':
+'Apache_Make_ssl':
+			}
+	
+	'NGINX_BASE':{
+'Nginx_Install':
+'Nginx_Install_Way':
+'Nginx_Rpm_Version':
+'Nginx_Make_Version':
+'Nginx_Make_Installation_Directory':
+'Nginx_Rpm_Conf_Path':
+'Nginx_Make_Conf_Path':
+			}
+			
+	'NGINX_OPTIONS':{
+'Nginx_Rpm_PidFile':
+'Nginx_Rpm_Listen':
+'Nginx_Rpm_User':
+'Nginx_Rpm_Group':
+'Nginx_Rpm_Vhost_Num':
+'Nginx_Rpm_Vhost_Conf':
+'Nginx_Rpm_Worker_Processes':
+'Nginx_Make_PidFile':
+'Nginx_Make_Listen':
+'Nginx_Make_User':
+'Nginx_Make_Group':
+'Nginx_Make_Vhost_Num'
+'Nginx_Make_Vhost_Conf':
+'Nginx_Make_Worker_Processes':
+			}
+			
+	'PHP_BASE':{
+'Php_Install':
+'Php_Install_Way':
+'Php_Rpm_Version':
+'Php_Make_Version':
+'Php_Make_Installation_Directory':
+'Php_Rpm_Conf_Path':
+'Php_Make_Conf_Path':
+			}
+			
+	'MYSQL_BASE':{
+'MySql_Install':
+'MySql_Install_Way':
+'MySql_Rpm_Version':
+'MySql_Make_Version':
+'MySql_Make_Installation_Directory':
+'MySql_Rpm_Conf_Path':
+'MySql_Make_Conf_Path':
+			}
+			
+	'OS_SECURITY_OPTIONS':{
+'Passwd_Permissions':
+'Group_Permissions':
+'Ssh_Disable_Dns':
+'Check_LogWatch':
+'Check_Rkhunter':
+'Check_Chkrootkit':
+'Check_Logcheck':
+'Locked_User_List':
+		}
+
+}
+
+#安全软件的检测
+rkhunter
+
+是否安装
+安装版本
+配置文件路径
+
+
+denyhost 
+
+DDoS deflate
+
+Suhosin
+
+falcon-web
+
+
+
+
+
+

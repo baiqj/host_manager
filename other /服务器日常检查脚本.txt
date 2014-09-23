@@ -1,0 +1,39 @@
+#目的：进行服务器的日常检查工作，并将检查的结果发送到管理员的邮箱
+
+#查找可以文件
+find / -uid 0 –perm -4000 –print 
+
+find / -size +10000k –print 
+
+find / -name “...“ –print 
+
+find / -name “.. “ –print 
+
+find / -name “. “ –print 
+
+find / -name “ “ –print
+#查找所有人都可写的文件
+find / -perm -002 \( -type f -o -type d \) -ls>>anyone-can-write
+
+#查看启动的端口
+netstat –nap>>/root/net.out
+
+#查找后门
+cat /etc/crontab>>backdoor.out
+echo "############################">>backdoor.out
+ls /var/spool/cron/>>backdoor.out
+echo "############################">>backdoor.out
+cat /etc/rc.d/rc.local>>backdoor.out 
+echo "############################">>backdoor.out
+ls /etc/rc.d >>backdoor.out
+echo "############################">>backdoor.out
+ls /etc/rc3.d >>backdoor.out
+echo "############################">>backdoor.out
+find / -type f -perm 4000>>backdoor.out
+
+
+#The following oneliner will find many common phpshells:
+
+find /home/*/public_html -type f -print0 | xargs -0 egrep
+'(\/tmp\/cmdtemp|SnIpEr_SA|c99shell|r57shell|milw0rm)'
+

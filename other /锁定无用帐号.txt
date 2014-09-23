@@ -1,0 +1,10 @@
+#!/bin/bash
+passwd -l uucp
+passwd -l guest
+passwd -l daemon
+passwd -l adm
+passwd -l lp
+passwd -l invscout
+passwd -l nobody
+passwd -l games
+passwd -l news

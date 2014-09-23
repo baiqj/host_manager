@@ -1,0 +1,37 @@
+linux下防止别人域名绑定到我IP上，
+
+快过年这段时间不断出现乱七八糟的事情做为一个运维很是难受 ，是自己做的防护不够还是？
+
+今天发现别人把域名绑定的我们的IP ，有的域名还做了跳转和缓存。
+
+这样我就很郁闷，具体怎么处理呢，iptables 处理好像不行吧，只能处理那种跳转过来的IP。绑定的怎么处理呢，
+
+我服务器前端是nginx+varnish 后端是apache ，想办法在nginx直接搞定他：
+
+ 
+  server {
+        listen       80;
+        server_name  www.hou.com;
+
+        charset gbk;
+
+        root  /html;
+
+     if ($host ~* www.663333.com){    #拒绝的域名
+     return 404;
+
+直接写个判断让他 这个域名的死在404上，这相当于做黑名单，也可以做白名单但是我们的二级域名太多，所以。
+
+想在apache上做呢？
+
+ 
+<VirtualHost *:80>
+    ServerName www.663333.com #拒绝的域名
+    <Location />
+    deny from all
+    </Location>
+</VirtualHost>
+
+ 
+
+最后在whois 663333.com  看是哪个域名的提供商，投诉电话搞定。

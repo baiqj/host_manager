@@ -1,0 +1,45 @@
+Chkrootkit安装配置教程 – Linux后门入侵检测
+
+rootkit从浅显的层面来讲即一种具有自我隐蔽性的后门程序，它往往被入侵者作为一种入侵工具。通过rootkit，入侵者可以偷偷控制被入侵的电脑，因此危害巨大。chkrootkit是一个Linux系统下的查找检测rootkit后门的工具。本文将介绍chkrootkit的安装与使用方法。
+chkrootkit没有包含在官方的CentOS或Debian源，因此我们将采取手动编译的方法来安装，这种方式也更加安全。由于需要编译源代码，因此还需要在系统中安装好gcc编译包。
+ 
+安装方法
+1、准备gcc编译环境
+对于CentOS系统，执行下述三条命令：
+yum -y install gcc
+yum -y install gcc-c++
+yum -y install make
+对于debian系统，执行下述两条命令：
+apt-get -y install gcc
+apt-get -y install make
+2、下载chkrootkit源码
+chkrootkit的官方网站为 http://www.chkrootkit.org ，下述下载地址为官方地址。为了安全起见，务必在官方下载此程序：
+1
+[root@www ~]# wget ftp://ftp.pangeia.com.br/pub/seg/pac/chkrootkit.tar.gz
+3、解压下载回来的安装包
+1
+[root@www ~]# tar zxf chkrootkit.tar.gz
+4、编译安装（后文命令中出现的“*”无需替换成具体字符，原样复制执行即可）
+1
+[root@www ~]# cd chkrootkit-*
+2
+[root@www ~]# make sense
+注意，上面的编译命令为make sense。
+5、把编译好的文件部署到/usr/local/目录中，并删除遗留的文件
+1
+[root@www ~]# cd ..
+2
+[root@www ~]# cp -r chkrootkit-* /usr/local/chkrootkit
+3
+[root@www ~]# rm -r chkrootkit-*
+至此，安装完毕。
+ 
+使用方法
+安装好的chkrootkit程序位于 /usr/local/chkrootkit/chkrootkit
+直接执行
+1
+root@vm:~# /usr/local/chkrootkit/chkrootkit
+即可对系统rootkit进行全面扫面，并滚动显示出结果，如图：
+
+ 
+安全提示：由于chkrootkit的检查过程使用了部分系统命令。因此，如果服务器被入侵，则依赖的系统命令可能也已经被入侵者做了手脚，chkrootkit的结果将变得完全不可信，甚至连系统ls等查看文件的基础命令也变得不可信。

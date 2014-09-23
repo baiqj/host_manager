@@ -1,0 +1,54 @@
+安装方法
+DDoS deflate的安装非常简单：
+1
+wget http://www.inetbase.com/scripts/ddos/install.sh
+2
+chmod +x install.sh
+3
+./install.sh
+然后会自动进行安装，完成后会有一段版权提示与说明，按q键退出即可。
+ 
+卸载方法
+1
+wget http://www.inetbase.com/scripts/ddos/uninstall.ddos
+2
+chmod +x uninstall.ddos
+3
+./uninstall.ddos
+ 
+主要功能与配置
+1、可以设置IP白名单，在 /usr/local/ddos/ignore.ip.list 中设置即可；
+2、主要配置文件位于 /usr/local/ddos/ddos.conf ，打开此文件，根据提示进行简单的编辑即可；
+3、DDoS deflate可以在阻止某一IP后，隔一段预置的时候自动对其解封；
+4、可以在配置文件中设置多长时间检查一次网络连接情况；
+5、当阻止IP后，可以设置Email提醒
+ 
+配置示例
+DDoS deflate的配置非常简单：
+平板视图打印？
+01
+FREQ=1 #检测的频率为1分钟
+02
+ 
+03
+NO_OF_CONNECTIONS=100 #当单个IP超过100个连接请求时判定为DDOS
+04
+ 
+05
+APF_BAN=0
+06
+#如果打算使用APF阻止IP，则设置为1（需要预先安装APF）；如果使用iptables，则设置为0；
+07
+ 
+08
+KILL=1 #是否阻止
+09
+ 
+10
+EMAIL_TO="webmaster@bootf.com" #接收邮件
+11
+ 
+12
+BAN_PERIOD=600 #阻止时长，10分钟
+相关参考
+

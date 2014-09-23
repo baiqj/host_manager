@@ -1,0 +1,55 @@
+
+https://github.com/seb-m/pyinotify
+
+
+
+任务说明：
+        某公司网站被黑客入侵并篡改页面，为了防止网站被黑客篡改和入侵，公司要求需要做一个黑客入侵预案，防止页面被黑客修改，影响公司形象。
+脚本设计思路：
+  检查发现被修改的为纯静态页面，所以只需要监测网站文件的完整性，当被修改后，及时替换回去就可以了。根据思路，将整个过程设计为：
+          备份目前正常的网站内网到一个目录
+          实时监测网站线上目录文件
+          如果发现有文件被篡改或者新增了文件
+          将线上内容恢复为备份的内容
+需要用到的工具：
+   根据思路，需要用到rsync做文件同步，使用inotifywait做实时目录监测。
+
+
+脚本内容：
+#!/bin/sh
+#定义inotifywait路径
+Check_exe=/opt/modules/inotify/bin/inotifywait
+#定义线上web目录
+Monitor_Object=/opt/onlinehtml
+#定义需要监测的状态
+Monitor_Status=modify,close_write,move,create,delete
+#定义备份目录的路径
+SRCDIR=/opt/htmlsrc
+#定义rsync路径
+Rsync_exe=/usr/bin/rsync
+#当前日期
+DATE_TODAY=`date +%Y.%m.%d`
+##恢复文件函数
+restoreweb(){
+${Rsync_exe} -av --delete ${SRCDIR}/ ${Monitor_Object}
+}
+##监测目录文件状态函数
+checkweb(){
+${Check_exe} -e ${Monitor_Status} -mr --timefmt '%d/%m/%y %H:%M'  --format '%T %w%f %e' ${Monitor_Object}
+}
+##主函数
+main(){
+checkweb|while read date time file event 
+do
+filename=`echo ${file}|awk -F"${Monitor_Object}" '{print $2}'`
+case ${event} in
+MOVE|CREATE|DELETE)
+restoreweb
+;;
+MODIFY|CLOSE_WRITE)
+${Rsync_exe} -av --delete ${SRCDIR}${filename} ${file}
+;;
+esac
+done
+}
+main

@@ -1,0 +1,8 @@
+
+
+https://github.com/SpiderLabs/ModSecurity
+
+
+owasp的规则设置
+
+https://github.com/SpiderLabs/owasp-modsecurity-crs

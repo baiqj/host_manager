@@ -1,0 +1,354 @@
+#!/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin;
+
+#info
+function amh_module_info()
+{
+	echo 'AMH-ModuleName: AMWebsite-2.0';
+	echo 'AMH-ModuleDescription: AMWebsite-2.0 AMH面板一键建站模块，快速安装搭建(Discuz、phpwind、WeCenter、WordPress、Typecho、ECShop)等网站程序。';
+	echo 'AMH-ModuleButton: 安装/卸载';
+	echo 'AMH-ModuleDate: 2013-08-08';
+	echo 'AMH-ModuleAdmin: ./index.php?c=AMWebsite';
+	echo 'AMH-ModuleWebSite: http://amysql.com';
+	echo 'AMH-ModuleIco: http://amysql.com/View/images/amh_module/AMWebsite.gif';
+	echo 'AMH-ModuleScriptBy: Amysql';
+}
+
+#install
+function amh_module_install()
+{
+	if amh_module_status ; then
+		exit;
+	else
+		for module_name in `ls /root/amh/modules/ | grep 'AMWebsite' | grep -v 'AMWebsite-2.0'`; do
+			amh module $module_name uninstall force;
+			amh module $module_name delete y;
+		done;
+		cd /root/amh/modules/AMWebsite-2.0;
+		\cp ./Controller/AMWebsite.php  /home/wwwroot/index/web/Controller/;
+		\cp ./View/AMWebsite.php ./View/AMWebsite_account_templet.php /home/wwwroot/index/web/View/;
+		\cp ./Model/AccountTemplets.php  /home/wwwroot/index/web/Model/;
+		\cp -a ./View/images/AMWebsite  /home/wwwroot/index/web/View/images;
+
+		mkdir /root/amh/modules/AMWebsite-2.0/tar;
+		amh_module_status;
+	fi;
+}
+
+#download
+function Downloadfile()
+{
+	randstr=$(date +%s);
+	cd /root/amh/modules/AMWebsite-2.0/tar/;
+
+	if [ -d $1 ]; then
+		echo "[OK] $1 found.";
+		return 0;
+	else
+		echo "[Notice] $1 not found, download now......";
+		if ! wget -c --tries=3 ${2}?${randstr} ; then
+			echo "[Error] Download Failed : $1, please check $2 ";
+			return 1;
+		else
+			mv ${1}.tar.gz?${randstr} ${1}.tar.gz;
+			tar -zxvf ${1}.tar.gz && rm -f ${1}.tar.gz;
+			return 0;
+		fi;
+	fi;
+}
+function addslashes()
+{
+        str=$1;
+        arr=('/' '&');
+        for v in ${arr[*]}; do str=${str//$v/\\$v}; done;
+        echo $str;
+        return 0;
+}
+
+#admin
+function amh_module_admin()
+{
+	if amh_module_status ; then
+		param_list=${1//,/ };
+		set -- $param_list;
+		action=$1;
+		host_domain=$2;
+		dir=$3;
+		install_model=$4;
+		product_name=$5;
+		admin_account=$6;
+
+		if [ "$action" == '' ]; then
+			echo "[Notice] AMWebsite-2.0 management, please select: (1~2)";
+			select action in 'install' 'exit'; do break; done;
+			[ "$action" == 'exit' ] && exit;
+			[ "$action" == '' ] && amh_module_admin; 
+		fi;
+		if [ "$host_domain" == '' ]; then
+			read -p "[Notice] Please input host domain(e.g domain.com): " host_domain
+			[ "$host_domain" == '' ] && amh_module_admin $action;
+		fi;
+
+		if [ "$dir" == '' ]; then
+			read -p "[Notice] Please input install directory(e.g /home/wwwroot/domain.com/web):" dir
+			[ "$dir" == '' ] && amh_module_admin $action;
+		fi;
+		[ ! -d "$dir" ] && echo "[Error] $dir not exist." && return 1;
+		[ "${dir:0:14}"  != '/home/wwwroot/' ] || echo "$dir" | grep '\.\.' && echo "[Error] $dir forbidden."  && return 1;
+
+		if [ "$install_model" == '' ]; then
+			echo "[Notice] Please select install model: (1~2)"
+			select install_model in 'manual' 'automatic'; do break; done;
+			[ "$install_model" == '' ] && amh_module_admin "$action,$dir";
+		fi;
+		if [ "$product_name" == '' ]; then
+			echo "[Notice] Please select a product: (1~6)";
+			select product_name in 'Discuz-3.0.8.2' 'phpwind-9.0.7.2' 'WeCenter-2.1' 'WordPress-3.6' 'Typecho-0.8' 'ECShop-2.7.3.7.8' 'emlog-5.1.2' 'EmpireCMS-7.0'; do break; done;
+			[ "$action" == '' ] && amh_module_admin; 
+		fi;
+
+
+		if [ "$action" == 'install' ]; then
+			
+			#Manual install.
+			if [ "$install_model" == 'manual' ]; then
+				# Delete all old files. *****************
+				cd $dir && rm -rf `ls $dir | grep -v 'ErrorPages'`;
+
+				# Download file. ************************
+				if Downloadfile "${product_name}" "http://code.amysql.com/files/${product_name}.tar.gz"; then
+					echo "[Notice] ${product_name} installing...";
+					cd $dir && cp -r /root/amh/modules/AMWebsite-2.0/tar/${product_name}/* ./ && chown -R www:www $dir && chmod -R 775 $dir && echo "[OK] ${dir} install ${product_name} success." && return 0;
+					return 1;
+				else
+					echo "[Error] Download Failed : ${product_name} ";
+					return 1;
+				fi;
+				
+			elif [ "$install_model" == 'automatic' ]; then
+				
+				if [ "$admin_account" == '' ]; then
+					read -p "[Notice] Please input admin account ID:" admin_account
+					[ "$admin_account" == '' ] && amh_module_admin "$action,$host_domain,$dir,$install_model,$product_name";
+				fi;
+
+				# Delete all old files. *****************
+				cd $dir && rm -rf `ls $dir | grep -v 'ErrorPages'`;
+
+
+				# Get account data. *********************
+				MysqlPass=`cat /home/wwwroot/index/web/Amysql/Config.php | awk '{ FS="\047Password\047] = \047"; RS="\047;" } { print $2}' | sed '/^$/d'`;
+				admin_array='';
+				array_i=0;
+				for account_value in `mysql -uroot -p${MysqlPass} -B -N -e "SELECT config_value FROM amh.amh_config WHERE config_name LIKE 'AMWebsite%${admin_account}' ORDER BY config_name DESC "`; do
+					admin_array[$array_i]="$account_value";
+					array_i=$[array_i+1];
+				done;
+				[ "${admin_array[0]}" == '' ] || [ "${admin_array[1]}" == '' ] && echo "[Error] admin account is empty."  && return 1;
+				
+
+				# Download file. ************************
+				if Downloadfile "${product_name}-auto" "http://code.amysql.com/files/${product_name}-auto.tar.gz"; then
+					echo "[Notice] ${product_name}-auto installing...";
+					if cd $dir && cp -r /root/amh/modules/AMWebsite-2.0/tar/${product_name}-auto/* ./ && chown -R www:www $dir && chmod -R 775 $dir; then
+						# Set database info and admin account. *****************
+						dir_tag=`echo -n $dir | md5sum | sed "s/ .*//" | cut -b -8`;
+						database_name="${host_domain}_${dir_tag}";
+						database_user="${dir_tag}_user";
+						database_pass=`echo -n $RANDOM | md5sum | sed "s/ .*//" | cut -b -15`;
+						database_pre=`echo $product_name | cut -d '-' -f 1`;
+						database_pre="${database_pre}_";
+						admin_user=${admin_array[0]};
+						admin_pass=${admin_array[1]};
+						admin_email=${admin_array[2]};
+						
+						# Admin account password. *******************************
+						# Close PATHINFO.
+						[ -d "/root/amh/modules/AMPathinfo-1.0" ] && amh module AMPathinfo-1.0 status && amh module AMPathinfo-1.0 admin "edit,${host_domain},close";
+						if [ "$product_name" == 'Discuz-3.0.8.2' ]; then
+							salt='1bce24';
+							salt_NEW=`echo -n $RANDOM | md5sum | sed "s/ .*//" | cut -b -6`;
+
+							salt2='Taw160';
+							salt_NEW2=`echo -n $RANDOM | md5sum | sed "s/ .*//" | cut -b -6`;
+
+							salt3='www.amysql.com';
+							web_root="/home/wwwroot/${host_domain}/web";
+							web_root=${dir/${web_root}/};
+							salt_NEW3="${host_domain}${web_root}";
+
+							Amysql_PASS='7e6db3b5e56c25dda68f57b3442b3d1d'; #ucenter_members
+							Amysql_PASS_NEW=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+							Amysql_PASS_NEW=`echo -n "${Amysql_PASS_NEW}${salt_NEW}" | md5sum | sed "s/ .*//"`;
+
+							Amysql_PASS2='aed24e9267bff841f5dd34cb0e97617d'; #common_member
+							Amysql_PASS_NEW2=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+
+							Amysql_PASS3='c1731ca40444165308261fb3255cff82'; #uc_server/data/config.inc.php
+							Amysql_PASS_NEW3=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+							Amysql_PASS_NEW3=`echo -n "${Amysql_PASS_NEW3}${salt_NEW2}" | md5sum | sed "s/ .*//"`;
+
+						elif [ "$product_name" == 'phpwind-9.0.7.2' ]; then
+							amh module download PDO_MYSQL-1.0.2;
+							amh module PDO_MYSQL-1.0.2 install force;
+							salt='WGn4Me';
+							salt_NEW=`echo -n $RANDOM | md5sum | sed "s/ .*//" | cut -b -6`;
+
+							salt2='www.amysql.com';
+							web_root="/home/wwwroot/${host_domain}/web";
+							web_root=${dir/${web_root}/};
+							salt_NEW2="${host_domain}${web_root}";
+
+							Amysql_PASS='5494aa635dadf41fec7164e846acecd4'; #windid_user
+							Amysql_PASS_NEW=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+							Amysql_PASS_NEW=`echo -n "${Amysql_PASS_NEW}${salt_NEW}" | md5sum | sed "s/ .*//"`;
+
+							Amysql_PASS2='4b47f9c86548822fa487e40be7948911'; #/conf/founder.php
+							Amysql_PASS_NEW2=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+
+							Amysql_PASS3='b65cd186ef4a745b8043ca751549ae3e'; #windid_app
+							Amysql_PASS_NEW3=`echo -n $RANDOM | md5sum | sed "s/ .*//"`;
+
+						elif [ "$product_name" == 'WeCenter-2.1' ]; then
+							amh module download PDO_MYSQL-1.0.2;
+							amh module PDO_MYSQL-1.0.2 install force;
+							salt='ukyw';
+							salt_NEW=`echo -n $RANDOM | md5sum | sed "s/ .*//" | cut -b -5`;
+
+							Amysql_PASS='d9fad409a6ba3593f8648f1766357910'; #users
+							Amysql_PASS_NEW=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+							Amysql_PASS_NEW=`echo -n "${Amysql_PASS_NEW}${salt_NEW}" | md5sum | sed "s/ .*//"`;
+
+							#base_url
+							salt2='www.amysql.com';
+							web_root="/home/wwwroot/${host_domain}/web";
+							web_root=${dir/${web_root}/};
+							salt_NEW2="${host_domain}${web_root}";
+							
+							#upload_dir
+							salt3='web_uploads';
+							salt_NEW3="./uploads";
+							
+							# json data replace.
+							admin_email_len=${#admin_email};
+							#base_url
+							salt_NEW2_len=${#salt_NEW2};
+							salt_NEW2_len=$[salt_NEW2_len+7];
+							#upload_dir
+							salt_NEW3_len=${#salt_NEW3};
+							#upload_url
+							salt_NEW4="${salt_NEW2}/uploads";
+							salt_NEW4_len=${#salt_NEW4};
+							salt_NEW4_len=$[salt_NEW4_len+7];
+							sed -i -e "s|'from_email', 's:17|'from_email', 's:${admin_email_len}|" -e "s|'base_url', 's:19|'base_url', 's:${salt_NEW2_len}|" -e "s|'upload_url', 's:27|'upload_url', 's:${salt_NEW4_len}|" -e "s|'upload_dir', 's:12|'upload_dir', 's:${salt_NEW3_len}|" ./AMWebsite.sql;
+							\cp ./wecenter.conf /usr/local/nginx/conf/rewrite/;
+
+						elif [ "$product_name" == 'WordPress-3.6' ]; then
+							salt='Hello_AMH';
+							salt_NEW="${host_domain}";
+							
+							salt2='www.amysql.com';
+							web_root="/home/wwwroot/${host_domain}/web";
+							web_root=${dir/${web_root}/};
+							salt_NEW2="${host_domain}${web_root}";
+
+							Amysql_PASS='4b47f9c86548822fa487e40be7948911'; #users
+							Amysql_PASS_NEW=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+						elif [ "$product_name" == 'Typecho-0.8' ]; then
+							amh module download AMPathinfo-1.0;
+							amh module AMPathinfo-1.0 install force;
+							amh module AMPathinfo-1.0 admin "edit,${host_domain},open";
+
+							salt='Hello_AMH';
+							salt_NEW="${host_domain}";
+							
+							salt2='www.amysql.com';
+							web_root="/home/wwwroot/${host_domain}/web";
+							web_root=${dir/${web_root}/};
+							salt_NEW2="${host_domain}${web_root}";
+
+							Amysql_PASS='923b8437c97eade0ee1a1f04b2bd746c'; #users
+							Amysql_PASS_NEW=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+						elif [ "$product_name" == 'ECShop-2.7.3.7.8' ]; then
+							Amysql_PASS='f34d4f8aff6841c13592e02e0f4eec2f'; #users
+							Amysql_PASS_NEW=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+						elif [ "$product_name" == 'EmpireCMS-7.0' ]; then
+							salt='qarpz'; #e/config/config.php
+							salt_NEW=`echo -n $RANDOM | md5sum | sed "s/ .*//" | cut -b -5`;
+							salt2='xbbcv';
+							salt_NEW2=`echo -n $RANDOM | md5sum | sed "s/ .*//" | cut -b -5`;
+
+							salt3='whWATpYv';
+							salt_NEW3=`echo -n $RANDOM | md5sum | sed "s/ .*//" | cut -b -8`;
+							Amysql_PASS='4c24222321031e5896940b28e2783c70'; #enewsuser
+							Amysql_PASS_NEW=`echo -n $admin_pass | md5sum | sed "s/ .*//"`;
+							Amysql_PASS_NEW=`echo -n "${Amysql_PASS_NEW}${salt_NEW3}" | md5sum | sed "s/ .*//"`;
+							Amysql_PASS2='jKivAsCKJKzv5HZdpgqADZ4eXsrYS5rNmDE942DpYMJfHG6J'; 
+							Amysql_PASS_NEW2=`echo -n $RANDOM | md5sum | sed "s/ .*//"`;
+						fi;
+						
+
+						# Replace string. ****************************************
+						f_key=('AmysqlTest_DZ' 'AmysqlTest_USER' 'AmysqlTest_PASS' 'AmysqlTest_PRE' 'admin@amysql.com' 'Amysql_ADMIN' "$salt" "$salt2" "$salt3" "$Amysql_PASS" "$Amysql_PASS2" "$Amysql_PASS3" 'amysql@amysql.com');
+						f_val=("$database_name" "$database_user" "$database_pass" "$database_pre" "$admin_email" "$admin_user" "$salt_NEW" "$salt_NEW2" "$salt_NEW3" "$Amysql_PASS_NEW" "$Amysql_PASS_NEW2" "$Amysql_PASS_NEW3" "$admin_email");
+						s=${#f_val[*]};
+						while [ $s -gt 0 ]; do
+							s=$[s-1] && [ "${f_val[$s]}" != '' ] && f_val[$s]=`addslashes "${f_val[$s]}"`;
+						done;
+						find ./ -type f | xargs sed -i -e "s/${f_key[0]}/${f_val[0]}/g" -e "s/${f_key[1]}/${f_val[1]}/g" -e "s/${f_key[2]}/${f_val[2]}/g"  -e "s/${f_key[3]}/${f_val[3]}/g"  -e "s/${f_key[4]}/${f_val[4]}/g"  -e "s/${f_key[5]}/${f_val[5]}/g"  -e "s/${f_key[6]}/${f_val[6]}/g" -e "s/${f_key[7]}/${f_val[7]}/g"  -e "s/${f_key[8]}/${f_val[8]}/g"  -e "s/${f_key[9]}/${f_val[9]}/g"  -e "s/${f_key[10]}/${f_val[10]}/g"  -e "s/${f_key[11]}/${f_val[11]}/g"  -e "s/${f_key[12]}/${f_val[12]}/g";
+						
+
+						# MySQL data. ********************************************
+						mysql -uroot -p${MysqlPass}  < ./AMWebsite.sql && rm -f ./AMWebsite.sql;
+						sql="CREATE USER '${database_user}'@'localhost'";
+						mysql -uroot -p${MysqlPass} -B -N -e "$sql" 2> /dev/null;
+						sql="SET PASSWORD FOR '${database_user}'@'localhost' = PASSWORD('${database_pass}')";
+						mysql -uroot -p${MysqlPass} -B -N -e "$sql";
+						sql="GRANT ALL PRIVILEGES ON \`${database_name}\`.* TO  '${database_user}'@'localhost' WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0";
+						mysql -uroot -p${MysqlPass} -B -N -e "$sql";
+						
+
+						# Database info save. ************************************
+						echo -e "<?php \n\n // AMH Module - AMWebsite-2.0 (AMWebsite_DB.php)\n\n // DB INFO\n \$AMWebsite_DBName = '$database_name'; \n \$AMWebsite_DBUser = '$database_user'; \n \$AMWebsite_DBPass = '$database_pass'; \n\n // Admin INFO\n \$AMWebsite_AdminUser = '$admin_user'; \n \$AMWebsite_AdminPass = '$admin_pass'; \n \$AMWebsite_AdminEmail = '$admin_email'; \n" > ./AMWebsite_DB.php;
+						cat ./AMWebsite_DB.php;
+						echo "[OK] ${dir} install ${product_name} success.";
+						return 0;
+					else
+						return 1;
+					fi;
+				else
+					echo "[Error] Download Failed : ${product_name}-atuo ";
+					return 1;
+				fi;
+			fi;
+		fi;
+	else
+		exit;
+	fi;
+}
+
+#uninstall
+function amh_module_uninstall()
+{
+	if amh_module_status ; then
+		rm -rf /home/wwwroot/index/web/Controller/AMWebsite.php /home/wwwroot/index/web/View/AMWebsite.php /home/wwwroot/index/web/View/AMWebsite_account_templet.php /home/wwwroot/index/web/Model/AccountTemplets.php /home/wwwroot/index/web/View/images/AMWebsite;
+		rm -rf /root/amh/modules/AMWebsite-2.0/tar;
+		MysqlPass=`cat /home/wwwroot/index/web/Amysql/Config.php | awk '{ FS="\047Password\047] = \047"; RS="\047;" } { print $2}' | sed '/^$/d'`;
+		mysql -uroot -p${MysqlPass} -B -N -e "use amh;DELETE FROM amh_config WHERE config_name LIKE 'AMWebsite%'";
+		echo '[OK] AMWebsite-2.0 Uninstall successful.';
+	else
+		exit;
+	fi;
+}
+
+#status
+function amh_module_status()
+{
+	if [ -d "/root/amh/modules/AMWebsite-2.0/tar" ]; then
+		echo '[OK] AMWebsite-2.0 is already installed.';
+		return 0;
+	else
+		echo '[Notice] AMWebsite-2.0 is not installed.';
+		return 1;
+	fi;
+}

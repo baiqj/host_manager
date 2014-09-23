@@ -1,0 +1,128 @@
+--prefix=/usr/share/nginx 
+--sbin-path=/usr/sbin/nginx 
+--conf-path=/etc/nginx/nginx.conf 
+--error-log-path=/var/log/nginx/error.log
+ --http-log-path=/var/log/nginx/access.log 
+ --http-client-body-temp-path=/var/lib/nginx/tmp/client_body 
+ --http-proxy-temp-path=/var/lib/nginx/tmp/proxy 
+ --http-fastcgi-temp-path=/var/lib/nginx/tmp/fastcgi 
+ --http-uwsgi-temp-path=/var/lib/nginx/tmp/uwsgi 
+ --http-scgi-temp-path=/var/lib/nginx/tmp/scgi 
+ --pid-path=/var/run/nginx.pid 
+ --lock-path=/var/lock/subsys/nginx 
+ --user=nginx --group=nginx 
+ --with-file-aio --with-ipv6 --with-http_ssl_module 
+ --with-http_realip_module 
+ --with-http_addition_module --with-http_xslt_module 
+ --with-http_image_filter_module 
+ --with-http_geoip_module --with-http_sub_module 
+ --with-http_dav_module --with-http_flv_module 
+ --with-http_mp4_module --with-http_gzip_static_module 
+ --with-http_random_index_module --with-http_secure_link_module 
+ --with-http_degradation_module --with-http_stub_status_module 
+ --with-http_perl_module --with-mail --with-mail_ssl_module 
+ --with-debug --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic' --with-ld-opt=-Wl,-E
+ 
+ 
+html页面的虚拟主机配置
+
+#
+# The default server
+#
+server {
+    listen       80 ;
+    server_name  vhost1.hongxin.com;
+	index index.html index.htm index.php default.html default.htm default.php;
+	root  $VHOST_DIR;
+    
+
+    error_page  404              /404.html;
+    location = /404.html {
+        root   /usr/share/nginx/html/www/vhost1.hongxin.com;
+    }
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html/www/vhost1.hongxin.com;
+    }
+	
+	location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+			{
+				expires      30d;
+			}
+	location ~ .*\.(js|css)?$
+			{
+				expires      12h;
+			}
+   access_log  $VHOST_DIR/$al_name.log  $al_name;
+}
+
+
+
+
+ # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+	
+	
+	/etc/nginx/fastcgi_params
+	
+	http://yuxianhua.iteye.com/blog/1874390
+	http://www.binarytides.com/install-nginx-php-fpm-centos/
+	更改user 和 group 
+	vi  /etc/php-fpm.d/www.conf 
+
+	vi  fastcgi_params  注释掉第十二行
+	
+php页面的配置
+
+log_format  vhost1.hongxin.com  '$remote_addr - $remote_user [$time_local] "$request" '
+             '$status $body_bytes_sent "$http_referer" '
+             '"$http_user_agent" $http_x_forwarded_for';
+server {
+    listen       80 ;
+    server_name  vhost1.hongxin.com;
+        index index.html index.htm index.php default.html default.htm default.php;
+        root  /usr/share/nginx/html/www/vhost1.hongxin.com;
+
+        # redirect server error pages to the static page /404.html
+    error_page  404              /404.html;
+    location = /404.html {
+        root   /usr/share/nginx/html;
+    }
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+        root           /usr/share/nginx/html/www/vhost1.hongxin.com;
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        #fastcgi_param  SCRIPT_FILENAME  /scripts;
+        fastcgi_param  SCRIPT_FILENAME   $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+                        {
+                                expires      30d;
+                        }
+        location ~ .*\.(js|css)?$
+                        {
+                                expires      12h;
+                        }
+   access_log  /usr/share/nginx/html/www/vhost1.hongxin.com/vhost1.hongxin.com.log  vhost1.hongxin.com;
+}
+~

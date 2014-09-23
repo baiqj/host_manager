@@ -1,0 +1,22 @@
+#此配置文件主要配置和网站有关的基本信息
+#
+#网站的域名
+
+#该域名对应的网络文件的位置
+
+#网站程序的名字，例如discuz,phpwind wordpress
+
+#网站程序的版本例如discuz的版本，wordpress的版本
+
+#网站域名
+domainname
+
+#网站程序目录
+domain_directory
+#网站数据库名字
+domain_db
+
+#数据库登陆用户名
+domain_db_user
+#数据库登陆密码
+domain_db_user_pass

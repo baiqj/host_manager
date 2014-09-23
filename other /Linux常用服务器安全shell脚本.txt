@@ -1,0 +1,70 @@
+Linux常用服务器安全shell脚本
+
+1. 找出那些被规则禁掉的IP,嗅探器
+这段代码会在当前目录下面生成黑名单，根据nginx的access日志，统计被禁掉的403访问，它们不是搜索引擎的爬虫 ，也不是本机地址。
+安全提示： 这个脚本对所有IP地址都是全面封杀无误的，所以你自己在使用这个脚本之前，千万要记住，不要为了测试你的规则，而直接用你的电脑，去测试 。因为万一触发了规则，就可能会被下面的脚本所查出来，包含在内。这种状况是可以避免的。
+1. 通过openvpn代理上网，如果openvpn和服务器是同一台，那么ip地址就是127.0.0.1，这个IP己经被安全的排除在外了。另外注意，如果你用了chnroute,那么就要看你的VPS是在美国还是在国内，如果在美国，则无需担心，如果在国内，那么chnroute会把路由判断为还是用原来国内的IP,还是会触发规则。建议如果你的VPS在国内，就不要用chnroute。你自己 对网站进行侵入测试，必须挂openvpn来弄。
+2. 可以在下面的脚本里面增加一条 grep -v “xx.xx.xx.xx” ，把你的IP排除在外，这个时候就有一点小繁琐，因为如果你跟我一样是用adsl上网，就会需要手动查看自己的IP，每次手动查看IP也挺麻烦的，所以还是建议用第一条方案。
+安全脚本文件，用于生成blacklist. 文件名: genblacklist.sh
+
+#!/bin/sh
+cat /var/log/nginx/access_log | grep " 403 " | grep -v google | grep -v sogou | grep -v baidu | grep -v "127.0.0.1" | grep -v "soso.com" | awk '{ print $1 }' | uniq | awk -F":" '{print $4}' | sort  | uniq > blacklist.txt
+
+
+
+2. 根据提供的blacklist禁止IP,解禁IP
+禁止IP脚本blockip.sh
+
+#!/bin/sh
+echo "Block following ip:"
+result=""
+while read LINE
+do
+/sbin/iptables -A FORWARD -s $LINE -j DROP
+if [ $? = "0" ];then
+result=$result$LINE","
+fi
+done < /vhosts/blacklist.txt
+echo $result"Done";
+
+解禁IP脚本releaseip.sh
+
+#!/bin/sh
+echo "Release following ip:"
+result=""
+while read LINE
+do
+/sbin/iptables -D FORWARD -s $LINE -j DROP
+if [ $? = "0" ];then
+result=$result$LINE","
+fi
+done < /vhosts/blacklist.txt
+echo $result"Done";
+
+3. 封杀嗅探器
+
+location ~* .(mdb|asp|rar) {
+        deny all;
+}
+if ($http_user_agent ~ ^Mozilla/4.0$ ) {
+        return 403;
+}
+
+4. 利用Cron自动屏蔽非法IP
+crontab -e编辑cron任务表。
+增加一条*/30 * * * * /vhosts/reblock.sh
+/vhosts/reblock.sh是自动执行封锁的命令。
+
+#!/bin/sh
+cd /vhosts
+/bin/sh /vhosts/releaseip.sh
+/bin/sh /vhosts/genblacklist.sh
+/bin/sh /vhosts/blockip.sh
+echo "total ip in black list:"
+/bin/cat /vhosts/blacklist.txt | /usr/bin/wc -l
+ 
+5 定位系统中没有属主的文件
+for PART in `grep -v ^# /etc/fstab | awk '($6 != "0") {print $2 }'`; 
+find $PART -nouser -o -nogroup -print
+
+6find / -type f -perm 0777

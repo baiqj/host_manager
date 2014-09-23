@@ -1,0 +1,10 @@
+mysqlrootpwd:xMc1d3FM
+
+DOMAIN=vhost1.hongxin.com   PROGRAM_TYPE=dedecms  DB_NAME=vhost1_hongxin_com   DB_USER_NAME=vhost1   DB_PASSWORD=vhost1  DB_CHARACTER=GBK
+
+DOMAIN=vhost2.hongxin.com   PROGRAM_TYPE=discuz  DB_NAME=vhost2_hongxin_com   DB_USER_NAME=vhost2   DB_PASSWORD=vhost2  DB_CHARACTER=utf8
+
+DOMAIN=vhost3.hongxin.com   PROGRAM_TYPE=phpwind  DB_NAME=vhost3_hongxin_com   DB_USER_NAME=vhost3   DB_PASSWORD=vhost3  DB_CHARACTER=utf8
+
+DOMAIN=vhost4.hongxin.com   PROGRAM_TYPE=wordpress  DB_NAME=vhost4_hongxin_com   DB_USER_NAME=vhost4   DB_PASSWORD=vhost4  DB_CHARACTER=GBK
+

@@ -1,0 +1,136 @@
+1、判断系统类型（CentOS\Debian\Ubuntu\Windows）
+
+2、判断http服务是否启动（stop、running、未安装）
+
+3、判断软件类型（apache、nginx、tomcat、iis）
+
+4、判断安装方式（rpm 、  apt-get 、 make install）
+
+5、判断是否启用vhost
+
+6、启用vhost，查看httpd
+
+
+Apache
+
+CentOS  rpm :  /etc/httpd/conf/httpd.conf
+
+Ubuntu  apt-get :/etc/apache2/apache2.conf      Include/include 都有效
+
+		编译安装默认目录：/usr/local/apache2
+
+1、常用变量
+
+declare  -i     COUNT_1  COUNT_2  COUNT_3  COUNT_4    ZERO=0  ONE=1   CONF_LINE  VHOST_NUM
+
+WORK_DIR    用于编译安装：prefix定义目录，默认/usr/local/apache2    (/etc/httpd)
+
+CONF_PATH   用于代表 httpd.conf文件的绝对路径 （/etc/httpd/conf/httpd.conf 或 /usr/local/apache2/conf/httpd.conf）
+
+CONF_LINE   用于统计httpd.conf文件的行数
+
+COUNT_*     用于wc -l的行数统计
+
+
+
+2、定义结果存放目录
+
+RESULT_PATH=/root
+
+
+3、生成文件
+
+
+vhost.list        用于存放vhost的域名和目录
+
+	domain
+	dir
+	#########
+	domain
+	dir
+
+absolute.list     用于存放Include包含的绝对路径
+		  如：/usr/local
+		  如：/usr/local/*.conf
+		  如：/usr/loca/*
+		  如：/usr/local/vhost-1.conf
+		
+relative.list	  用于存放Include包含的相对路径
+		  如：conf/
+		  如：conf/*.conf
+		  如：conf/*
+		  如：conf/vhost-2.conf
+		  
+
+Include.list  用于存放所有的Include路径（相对路径和绝对路径，可能是目录或文件）
+
+Include_file.list  用于存放所有的Include包含的文件（此处所有的文件是绝对路径格式）
+
+
+vhost_num.list    用于存放vhost的数量值
+
+
+
+
+脚本测试：
+
+4-rpm、
+
+不启用vhost
+
+启用vhost
+	    
+	在httpd.conf中设置vhost
+	在相对路径 如:conf.d/
+	在绝对路径 如：/www/
+
+
+5-make-install
+
+还需要考虑，./configure 时未指定prefix目录
+
+不启用vhost
+启用vhost
+	不包含 Include  httpd-vhosts.conf
+		httpd中设置vhost
+		相对路径
+		绝对路径
+	包含  Include  httpd-vhosts.conf
+		http中设置
+		相对路径
+		绝对路径（httpd-vhosts.conf属于绝对路径）
+
+
+
+
+nginx  的网页目录可能是相对目录   /usr/local/nginx
+需要判断 apache 能够使用相对目录 存放网页
+
+
+
+-------------------------------------------------
+需要注意的是判断脚本是否在root下运行
+
+判断CONF_PATH，很多情况下  有  conf.bak等文件名的干扰
+
+NameVirtualHost   （apache  rpm安装和apt安装），位置不一定在主配置文件中，也可能在Include文件中。
+
+
+Ubuntu系统
+
+1.判断软件是否成功安装
+
+#apt-cache  show   apache2
+
+#dpkg  -l   |  grep  apache2
+
+#apt-cache search string    根据关键字查找软件包名称
+
+2.判断软件的安装目录
+
+
+
+#updatedb
+#locate     apache2.conf         （注意apache版本，又上面的操作得到）
+
+

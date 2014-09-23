@@ -1,0 +1,49 @@
+#!/bin/sh
+# chkconfig: 2345 85 15
+# description: Apache is a World Wide Webserver.
+
+ARGV="$@"
+HTTPD='/usr/local/apache/bin/httpd'
+if test -f /usr/local/apache/bin/envvars; then
+  . /usr/local/apache/bin/envvars
+fi
+LYNX="lynx -dump"
+STATUSURL="http://localhost:80/server-status"
+ULIMIT_MAX_FILES="ulimit -S -n `ulimit -H -n`"
+
+if [ "x$ULIMIT_MAX_FILES" != "x" ] ; then
+    $ULIMIT_MAX_FILES
+fi
+
+ERROR=0
+if [ "x$ARGV" = "x" ] ; then 
+    ARGV="-h"
+fi
+
+case $ARGV in
+start|stop|restart|graceful|graceful-stop)
+    $HTTPD -k $ARGV
+    ERROR=$?
+    ;;
+startssl|sslstart|start-SSL)
+    echo The startssl option is no longer supported.
+    echo Please edit httpd.conf to include the SSL configuration settings
+    echo and then use "apachectl start".
+    ERROR=2
+    ;;
+configtest)
+    $HTTPD -t
+    ERROR=$?
+    ;;
+status)
+    $LYNX $STATUSURL | awk ' /process$/ { print; exit } { print } '
+    ;;
+fullstatus)
+    $LYNX $STATUSURL
+    ;;
+*)
+    $HTTPD $ARGV
+    ERROR=$?
+esac
+
+exit $ERROR

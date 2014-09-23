@@ -1,0 +1,15 @@
+1、ssh登录到Linux系统中，上传当前目录中的文件
+2、根据env_config的信息，判断是否有未分区的磁盘，若有数据盘且未分区，则执行自动分区脚本"initialize_disk.sh"
+	备注：该脚本并不会对已经分区且挂载的磁盘进行操作
+	备注：如果有额外的未使用的磁盘，分区后会生成/tmp/.mount.list存放挂载点目录
+3、执行"set_aliyuncs_sources.sh"更改yum源
+4.执行"install.sh"执行lnmp的安装流程
+	备注：安装mysql时需要注意的是：需要判断是否存在额外的磁盘分区。使用initialize_disk.sh，有额外的磁盘
+	备注：安装php是5.x系统和6.x系统的rpm包名称是不同的
+
+
+测试命令
+yum   install  dos2unix  -y 
+dos2unix  *.sh 
+
+date  >>  ./install_log  ;  echo  "###########"  >>  ./install_log  &&  bash  -x  initialize_disk.sh >>  install_log  ;  echo  "###########"  >>  ./install_log  &&  bash  -x  ./set_aliyuncs_source.sh  >>  install_log ;  echo  "###########"  >>  ./install_log  &&   bash  -x   install.sh  >>  install_log  ;  echo  "###########"  >>  ./install_log  &&  date  >>  ./install_log

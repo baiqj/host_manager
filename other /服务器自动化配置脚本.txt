@@ -1,0 +1,108 @@
+#!/bin/sh
+
+#目的：在安装完系统后，运行脚本，实现自动化增强系统安全性的目的
+
+#删除不必要的帐户
+userdel adm
+userdel news
+userdel uucp
+userdel games
+userdel gopher
+userdel lp
+
+
+#增强口令文件的安全性,这样处理后，系统不能添加用户和组。不能修改密码。
+#如果要添加用户，需要解除+i的属性
+chattr +i /etc/passwd
+
+chattr +i /etc/shadow
+
+chattr +i /etc/group
+
+chattr +i /etc/gshadow
+
+
+#增强执行文件的安全性
+chmod -R 700 /etc/rc.d/init.d/*
+
+#限制su命令，只允许admin组的用户可以su到root
+echo "#zhi yun xu admin zu de yong hu shi yong su dao root">>/etc/pam.d/su
+
+echo "auth sufficient /lib/security/pam_rootok.so debug">>/etc/pam.d/su
+
+echo "auth required /lib/security/pam_wheel.so group=admin">>/etc/pam.d/su
+
+#删除登陆信息
+rm -f /etc/issue
+
+rm -f /etc/issue.net
+
+touch /etc/issue
+
+touch /etc/issue.net
+
+
+#阻止ping攻击
+echo "#zu zhi ping gong ji">>/etc/rc.d/rc.local
+echo "echo 1＞/proc/sys/net/ipv4/">>/etc/rc.d/rc.local
+echo "icmp_echo_ignore_all">>/etc/rc.d/rc.local 
+
+#防止ip 欺骗
+
+echo "# zu zhi ip qi pian">>/etc/host.conf
+echo "order bind,hosts">>/etc/host.conf
+echo "multi off">>/etc/host.conf
+echo "nospoof on">>/etc/host.conf
+
+#防范syn flood
+
+#echo "#fang fan syn flood">>/etc/rc.d/rc.local
+#echo "#use syn cookies">>/etc/rc.d/rc.local
+#echo "sysctl -w net.ipv4.tcp_syncookies=1">>/etc/rc.d/rc.local
+
+#echo "#zeng jia tcp zui da ban lian jie shu">>/etc/rc.d/rc.local
+#echo "sysctl -w net.ipv4.tcp_max_syn_backlog=\"2048\" ">>/etc/rc.d/rc.local
+
+#echo "#jiang di chong shi ci shu">>/etc/rc.d/rc.local
+#echo "sysctl -w net.ipv4.tcp_synack_retries=3">>/etc/rc.d/rc.local
+#echo "sysctl -w net.ipv4.tcp_synack_retries=3">>/etc/rc.d/rc.local
+
+#禁止root直接登陆系统
+#echo "#jin zhi root deng lu ">>/etc/ssh/sshd_config
+#echo "PermitRootLogin no">>/etc/ssh/sshd_config
+
+#################################################
+find /home/ -name ".bash_history"|xargs chattr +a
+
+find /root -name ".bash_history"|xargs chattr +a
+
+find /home/ -name ".bash_history"|xargs chattr +i
+find /root -name ".bash_history"|xargs chattr +i
+
+userdel news
+userdel lp
+userdel sync
+ userdel shutdown
+ userdel uucp
+ userdel games
+ userdel halt
+
+chmod 700 /bin/ping
+chmod 700 /usr/bin/finger
+chmod 700 /usr/bin/who
+chmod 700 /usr/bin/w
+chmod 700 /usr/bin/locate
+chmod 700 /usr/bin/whereis
+chmod 700 /sbin/ifconfig
+chmod 700 /usr/bin/pico
+
+chmod 700 /usr/bin/which
+chmod 700 /usr/bin/gcc
+chmod 700 /usr/bin/make
+chmod 700 /bin/rpm
+
+
+chkrootkit | mail -s "Daily chkrootkit from Server Name" your@email.com
+
+检查启动的端口号
+ netstat -tnl | mail -s "web server open port" bqj123@126.com

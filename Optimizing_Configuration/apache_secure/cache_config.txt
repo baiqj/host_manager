@@ -1,0 +1,14 @@
+<IfModule mod_expires.c>
+# mod_expires
+ExpiresActive on
+ExpiresDefault A864000
+ExpiresBytype text/css “access plus 14 days
+ExpiresByType text/javascript “access plus 14 days ”
+ExpiresByType application/x-javascript “access plus 14 days ”
+ExpiresByType application/x-shockwave-flash “access plus 14 days ”
+ExpiresByType image/* “access plus 14 days ”
+ExpiresByType text/html “access plus 14 days ”
+<FilesMatch “.(flv|ico|pdf|avi|mov|ppt|doc|mp3|wmv|wav|jpg|gif)$”>
+ExpiresDefault A864000
+</FilesMatch>
+</IfModule>

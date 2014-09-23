@@ -1,0 +1,20 @@
+#“/root” Directory access control
+
+<Directory "/root">  
+Options None
+Order allow,deny  
+Deny from all
+</Directory> 
+
+#"/boot" Directory access control
+
+
+<Directory "/boot">  
+Options None
+Order allow,deny  
+Deny from all
+</Directory> 
+
+
+
+

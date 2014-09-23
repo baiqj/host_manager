@@ -1,0 +1,29 @@
+#!/bin/bash
+
+##############################
+#检测Logcheck是否安装
+##############################
+
+updatedb
+
+ENV_PATH=../env_config
+
+#查看是否存在logcheck的可执行文件
+locate  logcheck  | grep  "\/logcheck$"  |  grep  "bin/"
+
+
+#查看"Check_Logcheck"所在的行号
+
+LINE_NUM=`grep  -n  "Check_Logcheck"   $ENV_PATH  |  awk -F:  '{print $1}'`
+
+#在"Check_Logcheck"行之后添加一行
+
+if  [  `echo  $?` == 0 ]
+then
+	sed  -ie  "/Check_Logcheck/a \'Check_Logcheck\':\'YES\'" $ENV_PATH
+else
+	sed  -ie  "/Check_Logcheck/a \'Check_Logcheck\':\'NO\'" $ENV_PATH
+
+#删除原来的"Check_Logcheck"行
+
+sed -i  ''$LINE_NUM'd'   $ENV_PATH

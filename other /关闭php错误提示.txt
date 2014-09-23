@@ -1,0 +1,5 @@
+如果WEB应用程序自带错误处理/管理系统，请确保功能开启；否则按语言、环境，分别进行处理：
+1、如果是PHP应用程序/Apache服务器，可以通过修改php脚本、配置php.ini以及httpd.conf中的配置项来禁止显示错误信息：
+修改php.ini中的配置行: display_errors = off
+修改httpd.conf/apache2.conf中的配置行: php_flag display_errors off
+修改php脚本，增加代码行: ini_set('display_errors', false);

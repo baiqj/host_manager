@@ -1,0 +1,76 @@
+使用wget下载时，需要使用-O指定输出文件名
+
+	autoconf-2.13.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fautoconf-2.13.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:vr4ESFoBAT7%2FXLmPsL5HswTG4qE%3D
+
+	phpwind_v8.7_utf8.zip
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fphpwind_v8.7_utf8.zip?sign=MBO:E64167e555322cbfb5997582b43a551b:LC6Z4H3mToI%2BmCiiRdvnovX8t8I%3D
+
+	DedeCMS-v5.7-20130607-UTF8-SP1.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2FDedeCMS-v5.7-20130607-UTF8-SP1.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:8jfaCaYUOMgjOlm%2FAwaeDzIgpBQ%3D
+
+	Discuz_X3.1_SC_UTF8.zip
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2FDiscuz_X3.1_SC_UTF8.zip?sign=MBO:E64167e555322cbfb5997582b43a551b:g1m3LRdze1jmH44i5sV3N7ek7mk%3D
+
+	Discuz_X2.5_SC_UTF8.zip
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2FDiscuz_X2.5_SC_UTF8.zip?sign=MBO:E64167e555322cbfb5997582b43a551b:XfdT52efu2EP8Zj3bgFnxh0tDn0%3D
+
+	httpd-2.2.22.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fhttpd-2.2.22.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:sHkSwMXg%2FC5Ei7gNqBprsBx52Qo%3D
+
+	libmcrypt-2.5.8.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Flibmcrypt-2.5.8.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:X0bSkXoqRJff9tNgebW%2F%2BtpQL5I%3D
+
+	libiconv-1.13.1.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Flibiconv-1.13.1.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:G6wqy5OPDYZyz7Okl46bAaru7s4%3D
+
+	pcre-8.12.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fpcre-8.12.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:iWDLLbNgwfTirVepJhKbNvo2Ols%3D
+
+	php-5.5.7.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fphp-5.5.7.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:khAOFTBfDt5f0VzwpIT1d5xte7o%3D
+
+	php-5.4.23.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fphp-5.4.23.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:wplAJBdUKoTaVdp%2BDdqwXqGpIz0%3D
+
+	php-5.3.28.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fphp-5.3.28.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:tLKpkK87aNP7niRqG3tYXU0bos4%3D
+
+	PDO_MYSQL-1.0.2.tgz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2FPDO_MYSQL-1.0.2.tgz?sign=MBO:E64167e555322cbfb5997582b43a551b:EALNTfZiX%2Fgu4ByRMyXy0ssvHnM%3D
+
+	mhash-0.9.9.9.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fmhash-0.9.9.9.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:q84YUU2RMauD0PpUu5vbCCCtZr4%3D
+
+	mcrypt-2.6.8.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fmcrypt-2.6.8.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:ocPUK%2F9fGx%2BY%2BLQBEYAzsImKcqk%3D
+
+	mirrors-nginx-v1.4.4.zip
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fmirrors-nginx-v1.4.4.zip?sign=MBO:E64167e555322cbfb5997582b43a551b:gRlp%2FQ97hK55voKHMcwMEpVjdXg%3D
+
+	mirrors-nginx-v1.5.8.zip
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fmirrors-nginx-v1.5.8.zip?sign=MBO:E64167e555322cbfb5997582b43a551b:VfIavCNuMtcGb9Jej5IUAIuVd8Y%3D
+
+	mysql-5.1.60.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fmysql-5.1.60.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:kAAh6AK2OEhmlCg5WKpSqqgqliQ%3D
+
+	mysql-5.5.28.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fmysql-5.5.28.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:DTk9Joj%2F0jY0R84nsRWSSmknNLU%3D
+
+	nginx-1.2.7.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fnginx-1.2.7.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:dmhhQ9PJDzDcCd5snqaRcImDv5I%3D
+
+	Wordpress-3.6.tar.gz
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2FWordpress-3.6.tar.gz?sign=MBO:E64167e555322cbfb5997582b43a551b:AfgwLK%2F%2B4x7wEVazJMOVJNm1Lao%3D
+
+	ZendGuardLoader.so
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2FZendGuardLoader.so?sign=MBO:E64167e555322cbfb5997582b43a551b:chhntF5XaBi9jiAahkExe60Fht0%3D
+
+	phpwind_v8.7_GBK.zip
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2Fphpwind_v8.7_GBK.zip?sign=MBO:E64167e555322cbfb5997582b43a551b:o9mvrT4HDj7RHJnpiObApa1bGyE%3D
+
+	Discuz_X3.1_SC_GBK.zip
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2FDiscuz_X3.1_SC_GBK.zip?sign=MBO:E64167e555322cbfb5997582b43a551b:slsFpFE4TDOM1ERCapaqTbYpcKU%3D
+
+	DedeCMS-v5.7-20140313-GBK-SP1.zip
+http://bcs.duapp.com/linux2host2manager/%2Fshell_packages%2FDedeCMS-v5.7-20140313-GBK-SP1.zip?sign=MBO:E64167e555322cbfb5997582b43a551b:Ql%2ByZlS8fjJKP0eumWXKJVEKsuc%3D

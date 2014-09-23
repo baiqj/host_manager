@@ -1,0 +1,4 @@
+<VirtualHost *:80>
+DocumentRoot /tmp
+ServerName abc.com
+</VirtualHost>

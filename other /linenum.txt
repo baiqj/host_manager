@@ -1,0 +1,7 @@
+LinEnum是一个 Linux主机本 地信息自动提取的shell脚本，它有超过65项安全检查功能，比如潜在的SUID/GUID文件、Sudo/rhost错误配置等。另外这个脚本还可以 根据关键字（比如Password）搜索*.conf和*.log文件，这些功能对于渗透测试人员来说，是非常有用的。
+
+
+Buck-Security 是专为 Debian 和 Ubuntu 开发的安全扫描工具，可帮助你对系统进行全面的安全漏洞检测，例如找出任何人可写的文件和目录、setuid 和 setgid 程序、超级管理员帐号，以及系统中安装的攻击软件等等。
+	
+	
+	

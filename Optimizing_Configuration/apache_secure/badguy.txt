@@ -1,0 +1,17 @@
+BrowserMatchNoCase "iaskspider" badguy
+BrowserMatchNoCase "QihooBot" badguy
+BrowserMatchNoCase "larbin" badguy
+BrowserMatchNoCase "iearthworm" badguy
+BrowserMatchNoCase "Outfoxbot" badguy
+BrowserMatchNoCase "lanshanbot" badguy
+BrowserMatchNoCase "Arthur" badguy
+BrowserMatchNoCase "InfoPath" badguy
+BrowserMatchNoCase "DigExt" badguy
+BrowserMatchNoCase "Embedded" badguy
+BrowserMatchNoCase "EmbeddedWB" badguy
+BrowserMatchNoCase "Wget" badguy
+BrowserMatchNoCase "CNCDialer" badguy
+BrowserMatchNoCase "LWP::Simple" badguy
+BrowserMatchNoCase "WPS" badguy
+deny from env=badguy
+
