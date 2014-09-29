@@ -3,6 +3,9 @@ host_manager
 
 linux nginx mysql php manager
 
+安装 Ksplice 
+
+
 
 
 一键分区:一键对云主机的数据盘进行初始化分区
