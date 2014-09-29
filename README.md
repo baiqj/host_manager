@@ -26,6 +26,20 @@ linux nginx mysql php manager
 一键安检：一键对服务器以及网站安全进行检测
 
 
+安装常见的监控工具
+
+安装mysql管理有的工具
+
+
+mysql备份
+
+nginx日志分析
+
+入侵检测
+
+
+
+
 
 
 
