@@ -1,0 +1,69 @@
+DDos和CC攻击是每个做运维都非常头疼的事情，需要快速定位攻击的url地址以及探测攻击规模。Logstalgia（也称ApachePong）便是这样的软件，Logstalgia通过分析Apache、nginx、lighttpd、varnish、squid等web服务产生的日志，以可视化的形态展现给管理员。这个过程是非常酷的，我找到了这份视频：
+
+
+如何安装Logstalgia？
+
+首先，使用Logstalgia是不需要安装在服务器里的，只需要安装在本地电脑中即可。本地电脑有一个前提，Logstalgia要求显卡必须支持OpenGL。OK，继续往下看。
+
+安装Logstalgia，首先满足库要求：
+yum install SDL-devel SDL_image-devel ftgl-devel pcre-devel libpng10-devel libpng-devel libjpeg-devel #Centos or fedora
+sudo apt-get install libsdl1.2-dev libsdl-image1.2-dev libpcre3-dev libftgl-dev libpng12-dev libjpeg62-dev #Debian or Ubuntu
+
+如果使用ubuntu，可以直接用aptitude安装。#aptitude install logstalgia
+
+下载源码编译安装Logstalgia
+cd /usr/local/src/
+wget https://logstalgia.googlecode.com/files/logstalgia-1.0.3.tar.gz
+tar -zxf logstalgia-1.0.3.tar.gz
+cd logstalgia-1.0.3
+./configure
+make
+make install
+
+如何使用Logstalgia？
+Logstalgia 在2011年发布的1.0.3版本中包含了linux和windows（已编译好）的版本，可以直接运行，执行的命令范本如下：
+logstalgia access_log
+logstalgia /var/www/httpd/access_log
+logstalgia [options] /var/www/httpd/access_log
+
+但一般我们不会在服务器上接显示器查看，绝大部分是以客户端控制服务器的方式去处理问题的。那么这里以Ubuntu系统为例，使用ssh命令配合管道即可：
+ssh srvadm@srv1.evlit.com tail -f /var/log/apache2/access.log | logstalgia --sync
+
+如何保存Logstalgia的视频？
+有时候需要将过程录制下来，可以使用--output-ppm-stream选项，然后再使用开源的ffmpeg转换成mp4格式或其他你想要的格式。
+ssh srvadm@srv1.evlit.com tail -f /var/log/apache2/access.log | logstalgia -1280x720 --output-ppm-stream --sync output.ppm
+ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 output.mp4
+
+最后推荐另外一款实时可视化日志展示软件，使用ruby写成的glTail
+
+
+
+
+Logcheck用来分析庞大的日志文件，过滤出有潜在安全风险或其他不正常情况的日志项目，然后以电子邮件的形式通知指定的用户
+
+
+glTail.rb - realtime logfile visualization
+
+
+
+
+
+StatViz 是一个可视化的网站点击分析工具。
+http://statviz.sourceforge.net/
+
+
+
+Pothos is an iptables log analyzer. It is used to interpret, in a user-friendly fashion, the logs that ulogd creates with it's MySQL plugin. It's main objective is to be efficient, leaving as small a foot-print as possible.
+
+
+
+log2timeline是一个自动化的超级时间图表(Timeline)生成框架，
+它的主要目标是：“提供一个能够解析各种日志文件并日志中发现系统潜 在威胁的工具，
+然后，以时间图表的形式将分析结果展示出来，便于调查取证人员和日志分析人员使用。
+该工具由perl语言开发支持linux，并且在Mac OS X (10.5.7+ and 10.6.+)下测试通过，windows平台未经测试。
+
+http://plaso.kiddaland.net/
+
+GoAccess 是一款开源的网站日志实时分析工具。GoAccess 的工作方式很容易理解，就是读取和解析 Apache/Nginx/Lighttpd 的访问日志文件 access log，然后以更友好的方式把统计信息显示出来。统计的内容包括：访问概况、动态页面请求、静态页面请求（如图片、样式表、脚本等）、访客排名，访客使用的操作系统，访客使用的浏览器，来路域名，404 错误，搜索爬虫，搜索关键词等等。
+
+
