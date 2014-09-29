@@ -27,6 +27,7 @@ disclosure** vulnerability. It reveals a lot of, potentially:
  
 ## Which PHP settings are altered and why?
 
+
  The following settings are altered:
  
   1. **Error logging** &mdash; for **production/staging** environments
