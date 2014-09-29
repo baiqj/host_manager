@@ -1,0 +1,1 @@
+如果不确定 MySQL 内存使用情况，可以利用 MySQLReport 这个工具收集一下 MySQL 实例的信息报告，不同时间段多收集几次作为对比。然后相应的调整 key_buffer/query_cache_size 等参数的大小, 一次调整一个参数，重启动 MySQL ，继续抽取报告，分析数据，然后调整下一个参数。既然需要编辑配置文件 my.cnf , 建议顺手加大一点 max_connections 这个参数(为什么?)。
